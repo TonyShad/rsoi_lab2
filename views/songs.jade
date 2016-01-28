@@ -1,0 +1,20 @@
+//
+   Created by user on 25.01.2016.
+
+extends layout
+
+block content
+    h1 Songs
+        h2 Добавить Песню
+        form
+            p Название песни
+            input#inputName(type="text", name="name")
+            p Текст песни
+            textarea#inputText
+            p Выберите исполнителя
+            select#selectArtist
+        input#addSong(type="submit", value="добавить")
+        ul#songs
+
+
+        script(type="text/javascript", src="/javascripts/songs.js")
