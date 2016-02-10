@@ -75,19 +75,35 @@ dataBase.addUser = function(name, passwordDigest, done){
     user = {
         "name": name,
         "passwordDigest": passwordDigest
-    }
+    };
     connection.collection('users').insertOne(user, done);
 };
 
-dataBase.signUser = function(name, passwordDigest, done){
-    connection.collection('users').find({name : name.toString()}).toArray(function(error, user){
-        if(error){
-            return next(error);
-        }
-        if(user.passwordDigest == passwordDigest){
-            return next("OK");
-        }
-    });
+dataBase.getUser = function(name, done){
+    connection.collection('users').findOne({name : name.toString()}, done);
+};
+
+dataBase.addApp = function(name, redirectURL, secret, user, done){
+    var app;
+    app = {
+        "name": name,
+        "redirectURL": redirectURL,
+        "secret": secret,
+        "ownerID": user
+    };
+    connection.collection('apps').insertOne(app, done);
+};
+
+dataBase.getApps = function(done){
+    connection.collection('apps').find().toArray(done);
+};
+
+dataBase.getApp = function(id, done){
+    connection.collection('apps').findOne({_id : ObjectId(id.toString())}, done);
+}
+
+dataBase.removeApp = function(id, done){
+    connection.collection('apps').deleteOne({_id: ObjectId(id.toString())}, done);
 };
 
 module.exports = dataBase;

@@ -1,0 +1,19 @@
+//
+   Created by user on 09.02.2016.
+
+extends layout
+
+block content
+    h1 Registered Apps
+        h2 Sign up your application
+        form
+            p название приложения
+            input#inputName(type="text", name="name")
+            p redirect URL
+            input#inputRedirect(type="text", name="redirectURL")
+        input#submitApp(type="submit", value="Добавить")
+        ul#apps
+
+
+
+    script(type="text/javascript", src="/javascripts/apps.js")

@@ -5,16 +5,18 @@
 function signUser() {
     var name = $("#inputName").val();
     var password = $("#inputPassword").val();
+
     $.ajax({
-        url: "/signinuser",
-        method: "get",
-        data: {
-            name: name,
-            password: password
-        },
+        url: "/signinuser?"+"name="+name+"&password="+password+"&"+window.location.href.split('?')[1] ,
         error: onError,
-        success: function(){
-            alert("пользователь Авторизирован");
+        success: function(data){
+            if(data.url){
+                location.replace(data.url);
+            }
+            else
+            {
+                alert("пользователь Авторизирован");
+            }
         }
     });
 }

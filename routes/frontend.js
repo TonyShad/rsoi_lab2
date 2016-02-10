@@ -6,19 +6,19 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/songs', function(req, res, next) {
-    res.render('songs', { title: 'Песни' });
+    res.render('songs', { title: 'Песни', login: true});
 });
 
 router.get('/artists', function(req, res, next) {
-    res.render('artists', { title: 'Артисты' });
+    res.render('artists', { title: 'Артисты', login: true});
 });
 
-router.get('/signup', function(req, res, next) {
-    res.render('signup', { title: 'Регистрация' })
+router.get('/apps', function(req, res, next){
+    res.render('apps', {title: 'Приложения', login: true});
 });
 
-router.get('/signin', function(req, res, next) {
-    res.render('signin', { title: 'Авторизация' })
+router.get('/agreements', function(req, res, next){
+    res.render('agreements', { appname: req.query.name });
 });
 
 module.exports = router;
