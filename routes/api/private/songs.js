@@ -3,23 +3,43 @@
  */
 
 var express = require("express");
-
+var defaultPageSize = 5;
+var checkLogin = require("../../auth");
 var router = express.Router();
 var db = global.container.dataBase;
 
 module.exports = router;
 
 router.route("/songs")
-    .get(function(req, res, next){
-        db.getSongs(function(error, songList){
+    .get(checkLogin, function(req, res, next){
+        var start = req.query.pageStart || 0;
+        var pageSize = req.query.pageSize || defaultPageSize;
+        db.getSongs(pageSize, start, function(error, songList){
             if(error){
                 return next(error);
             }
-            res.send(songList);
-            res.end();
+            if(start == 0){
+                db.getSongsCount(function(error, count){
+                    if(error){
+                        return next(error);
+                    }
+                    res.send({
+                        songs: songList,
+                        count: count
+                    });
+                    res.end();
+                });
+            }
+            else{
+                res.send({
+                    songs: songList
+                });
+                res.end();
+            }
+
         });
     })
-    .post(function(req, res, next){
+    .post(checkLogin, function(req, res, next){
         if(!req.body.name || !req.body.text || !req.body.artistId){
             var error = new Error("Параметрами запроса должны быть name, text и artistId");
             error.status = 400;
@@ -38,7 +58,7 @@ router.route("/songs")
 
 
 router.route("/songs/:id")
-    .get(function(req, res, next) {
+    .get(checkLogin, function(req, res, next) {
         db.getSong(req.params.id, function (error, song) {
             if (error) {
                 return next(error);
@@ -59,7 +79,7 @@ router.route("/songs/:id")
         });
 
     })
-    .delete(function(req, res, next){
+    .delete(checkLogin, function(req, res, next){
         db.removeSong(req.params.id,function(error) {
             if (error) {
                 return next(error);

@@ -4,7 +4,7 @@
 
 var dataBase = {};
 var connection;
-var debug = require('debug')("rsoi_lab2:database")
+var debug = require('debug')("rsoi_lab2:database");
 var client = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var bcrypt = require('bcrypt');
@@ -29,14 +29,18 @@ dataBase.addSong = function(name, text, artistId, done){
 
 };
 
-dataBase.getSongs = function(done){
-    connection.collection('songs').find().map(function(song){
+dataBase.getSongs = function(pageSize, pageStart, done){
+    connection.collection('songs').find().skip(parseInt(pageStart)).limit(parseInt(pageSize)).map(function(song){
         return {
             _id: song._id,
             name: song.name
         };
     }).toArray(done);
 
+};
+
+dataBase.getSongsCount = function(done){
+    connection.collection('songs').count(done);
 };
 
 dataBase.getSong = function(id, done){
@@ -100,10 +104,43 @@ dataBase.getApps = function(done){
 
 dataBase.getApp = function(id, done){
     connection.collection('apps').findOne({_id : ObjectId(id.toString())}, done);
-}
+};
 
 dataBase.removeApp = function(id, done){
     connection.collection('apps').deleteOne({_id: ObjectId(id.toString())}, done);
+};
+
+dataBase.addAccessKey = function(clientId, userId, accessKey, done){
+    var key;
+    key = {
+        "appId": clientId,
+        "userId": userId,
+        "accessKey": accessKey
+    };
+    connection.collection('accessKeys').insertOne(key, done);
+};
+
+dataBase.getKey = function(clientId, accessKey, done){
+    connection.collection('accessKeys').findOne({appId: clientId, accessKey: parseInt(accessKey)}, function(error, keys){
+        if(error){
+            return done(error);
+        }
+        done(null, keys);
+    });
+};
+
+dataBase.addToken = function(appId, userId, accessToken, done){
+    var token;
+    token = {
+        "appId": appId,
+        "userId": userId,
+        "accessToken": accessToken
+    };
+    connection.collection('accessTokens').insertOne(token, done);
+};
+
+dataBase.getToken = function(accessToken, done){
+    connection.collection('accessTokens').findOne({accessToken: parseInt(accessToken)}, done);
 };
 
 module.exports = dataBase;

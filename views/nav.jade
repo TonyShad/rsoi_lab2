@@ -7,6 +7,9 @@ div.nav
 
         li: a(href="/songs") Песни
 
-        li.login: a(href="/signup") Регистрация
-            a(href="/signin") Войти
+        if login
+            li.logout: a(href="/logout") Выйти
+        else
+            li.login: a(href="/signup") Регистрация
+                a(href="/signin") Войти
 

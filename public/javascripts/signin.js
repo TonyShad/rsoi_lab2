@@ -16,6 +16,7 @@ function signUser() {
             else
             {
                 alert("пользователь Авторизирован");
+                location.replace("/songs");
             }
         }
     });

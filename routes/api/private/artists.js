@@ -2,6 +2,7 @@
  * Created by user on 27.01.2016.
  */
 var express = require("express");
+var checkLogin = require("../../auth");
 
 var router = express.Router();
 var db = global.container.dataBase;
@@ -9,7 +10,7 @@ var db = global.container.dataBase;
 module.exports = router;
 
 router.route("/artists")
-    .get(function(req, res, next){
+    .get(checkLogin, function(req, res, next){
         db.getArtists(function(error, artistList){
             if(error){
                 return next(error);
@@ -18,7 +19,7 @@ router.route("/artists")
             res.end();
         });
     })
-    .post(function(req, res, next){
+    .post(checkLogin, function(req, res, next){
         if(!req.body.name){
             var error = new Error("Параметрами запроса должен быть name");
             error.status = 400;
@@ -36,7 +37,7 @@ router.route("/artists")
     });
 
 router.route("/artists/:id")
-    .delete(function(req, res, next){
+    .delete(checkLogin, function(req, res, next){
         db.removeArtist(req.params.id,function(error) {
             if (error) {
                 return next(error);

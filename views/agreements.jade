@@ -1,8 +1,9 @@
 //
    Created by user on 09.02.2016.
+extends layout
+block content
+    h1= "ВЫ СОГЛАСНЫ ПРЕДОСТАВИТЬ СВОИ ПЕРсОНАЛЬНЫЕ ДАННЫЕ ПРИЛОЖЕНИЮ "+ appname + "?"
 
-h1= "ВЫ СОГЛАСНЫ ПРЕДОСТАВИТЬ СВОИ ПЕРсОНАЛЬНЫЕ ДАННЫЕ ПРИЛОЖЕНИЮ "+ appname + "?"
+    button#accept ДА
 
-button#accept ДА
-
-script(type="text/javascript", src="/javascripts/agreements.js")
+    script(type="text/javascript", src="/javascripts/agreements.js")

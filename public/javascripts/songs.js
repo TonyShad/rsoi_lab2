@@ -2,13 +2,17 @@
  * Created by user on 27.01.2016.
  */
 ;
-function updateSongs() {
+function updateSongs(pageStart) {
     $.ajax({
-        url: "/api/songs",
+        url: "/api/songs?pageStart="+pageStart,
         error: onError,
         success: function(data){
+            if(data.songs.length == 0){
+                page -= 5;
+                return;
+            }
             $('#songs').empty();
-            data.forEach(function(current, index, array){
+            data.songs.forEach(function(current, index, array){
                 $('#songs').append(constructSong(current));
                 $('#'+current._id+' .remove').click(removeSong);
                 $('#'+current._id+' h3').click(openRichSong);
@@ -88,10 +92,22 @@ function openRichSong(e) {
     });
 }
 
+var page = 0;
 $(document).ready(function(){
     $("#addSong").click(addSong);
     requestArtists();
     updateSongs();
+    $("#next").click(function(){
+        page += 5;
+        updateSongs(page);
+    });
+    $("#prev").click(function(){
+        page -= 5;
+        if(page < 0){
+            page = 0;
+        }
+        updateSongs(page);
+    })
 
 
 });

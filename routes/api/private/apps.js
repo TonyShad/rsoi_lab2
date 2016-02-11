@@ -2,13 +2,14 @@
  * Created by user on 09.02.2016.
  */
 var express = require("express");
+var checkLogin = require("../../auth");
 
 var router = express.Router();
 var db = global.container.dataBase;
 
 
 router.route("/apps")
-    .post(function(req, res, next){
+    .post(checkLogin, function(req, res, next){
         if(!req.body.name){
             var error = new Error("Не введено имя приложения (name)");
             error.status = 400;
@@ -27,7 +28,7 @@ router.route("/apps")
         });
 
     })
-    .get(function(req, res, next){
+    .get(checkLogin, function(req, res, next){
         db.getApps(function(error, appList){
             if(error){
                 return next(error);
@@ -38,7 +39,7 @@ router.route("/apps")
     });
 
 router.route("/apps/:id")
-    .delete(function(req, res, next){
+    .delete(checkLogin, function(req, res, next){
         db.removeApp(req.params.id,function(error) {
             if (error) {
                 return next(error);
